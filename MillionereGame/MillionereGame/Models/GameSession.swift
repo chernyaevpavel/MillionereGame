@@ -10,19 +10,24 @@ import UIKit
 class GameSession {
     var hints: [Hints] = [.callAFriend, .fiftyFifty, .helpAudience]
     private let countQuestion = {
-        Questions.shared.questions.count + 1
+        Questions.shared.questions.count
     }()
     private var countCorrectAnswer = 0
+    var percentCorrectAnswer = Observable<Double>(0)
+    var currentNumberQuestion = Observable<Int>(0)
 }
 
 extension GameSession: GameVCDelegate {
+    
     //MARK: - правильный ответ
-    func getCorrectAnswer() -> Int {
+    func getCountCorrectAnswer() -> Int {
         countCorrectAnswer
     }
-    
+
     func addCorrectAnswer() {
         countCorrectAnswer += 1
+        let dblPercent = Double(countCorrectAnswer) / Double(countQuestion) * 100
+        percentCorrectAnswer.value = dblPercent
     }
     
     //MARK: - завершить игру
@@ -30,7 +35,6 @@ extension GameSession: GameVCDelegate {
         let result = Double(countCorrectAnswer) / Double(countQuestion) * 100
         let resultGame = ResultGame(result: result, date: Date())
         Game.shared.endGame(resultGame)
-        Game.shared.gameSession = nil
     }
     
     //MARK: - подсказки
@@ -42,5 +46,14 @@ extension GameSession: GameVCDelegate {
     
     func getHints() -> [Hints] {
         hints
+    }
+    
+    //MARK: - текущий номер вопроса
+    func addCurrentNumberQuestion() {
+        currentNumberQuestion.value += 1
+    }
+    
+    func getCurrentNumberQuestion() -> Int {
+        currentNumberQuestion.value
     }
 }

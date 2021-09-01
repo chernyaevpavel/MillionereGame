@@ -7,17 +7,12 @@
 
 import Foundation
 
-struct Answer {
-    let text: String
-    let isCorrect: Bool
+struct Answer: Codable {
+    var text: String
+    var isCorrect: Bool
     
-    init(_ answer: String, _ isCorrect: Bool) {
+    init(_ answer: String, _ isCorrect: Bool = false) {
         self.text = answer
         self.isCorrect = isCorrect
-    }
-    
-    init(_ answer: String) {
-        self.text = answer
-        self.isCorrect = false
     }
 }
